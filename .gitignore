@@ -1,6 +1,7 @@
 *.log
 logs/
 tmp/
+*.bz2
 
 # Eclipse
 .classpath
