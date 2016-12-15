@@ -5,6 +5,11 @@ import java.util.regex.Pattern;
 
 import com.miner.util.Runner;
 
+/**
+ * Parse all meta tag
+ * @author Luo Guofu
+ *
+ */
 public class MetaParser implements IParser {
 	public static final Pattern META_PATTERN = Pattern.compile("(<meta[\\w\\W]+?>)");
 

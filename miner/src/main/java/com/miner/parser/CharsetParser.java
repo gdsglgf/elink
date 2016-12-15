@@ -5,6 +5,11 @@ import java.util.regex.Pattern;
 
 import com.miner.util.Runner;
 
+/**
+ * Parse html charset
+ * @author Luo Guofu
+ *
+ */
 public class CharsetParser implements IParser {
 	public static final Pattern CHARSET_PATTERN = Pattern.compile("(?:charset|Charset|CHARSET)\\s*=\\s*\"?\\s*([-\\w]*?)[^-\\w]");
 	public static final String DEFAULT_CHARSET = "UTF-8";
