@@ -12,4 +12,4 @@ public interface IParser {
 	 * @param index  文件在bz2中的位置(从1开始)
 	 */
 	public void parse(String html, int index);
-}
+}             

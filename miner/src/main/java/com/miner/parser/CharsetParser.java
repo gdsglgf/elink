@@ -25,7 +25,10 @@ public class CharsetParser implements IParser {
 	}
 	
 	public static void main(String[] args) {
-		Runner.benchmark(new CharsetParser());
+		//Runner.benchmark(new CharsetParser());
+		//String html="<doc><docno>123456</docno><url>http://www.test.com/</url><!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> <meta name=\"keywords\" content=\"一千零一夜 天方夜谭 阿拉伯之夜\" />";
+		//int index = 1 ;
+		//new CharsetParser().parse(html, index);
 	}
 
 }
