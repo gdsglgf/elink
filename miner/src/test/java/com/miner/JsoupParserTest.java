@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.miner.parser.JsoupParser;
+import com.miner.util.BZ2Splitter;
 import com.miner.util.IOUtils;
 
 public class JsoupParserTest {
@@ -36,8 +37,8 @@ public class JsoupParserTest {
 	public void testFromFile() {
 		String html = IOUtils.fileToString("src/test/data/test.html");
 		jp.parse(html, 1);
-		//html=IOUtils.toString(new BufferedReader());
-		jp.parse(html, 2);
+		BZ2Splitter.split("src/test/data/test.bz2", jp);
+	//	p.parse(html, 2);
 	}
 
 }
