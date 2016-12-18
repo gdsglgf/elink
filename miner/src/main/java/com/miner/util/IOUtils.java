@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -37,19 +38,43 @@ public class IOUtils {
 		return fileToString(file.getAbsolutePath());
 	}
 	
-	/**
-	 * 写字符串到文件
-	 * @param text  要保存的字符串
-	 * @param targetFilePath  文件路径名
-	 */
-	public static void writeToFile(String text, String targetFilePath) {
-		Path targetPath = Paths.get(targetFilePath);
+	private static void writeToFile(String text, String path, OpenOption... options) {
+		Path targetPath = Paths.get(path);
 		byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
 		try {
-			Files.write(targetPath, bytes, StandardOpenOption.CREATE);
-			System.out.println("Done writing to " + targetFilePath); // For testing
+			Files.write(targetPath, bytes, options);
+			System.out.println("Done writing to " + path); // For testing
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 写字符串到文件
+	 * @param text  要保存的字符串
+	 * @param path  文件路径名
+	 */
+	public static void writeToFile(String text, String path) {
+		// StandardOpenOption.CREATE ---  Create a new file if it does not exist. If the file already exists, it will modify the file.
+		// StandardOpenOption.CREATE_NEW  --- Create a new file, failing if the file already exists.
+		writeToFile(text, path, StandardOpenOption.CREATE_NEW);
+	}
+	
+	/**
+	 * 写字符串到文件
+	 * @param text  要保存的字符串
+	 * @param path  文件路径名
+	 */
+	public static void appendToFile(String text, String path) {
+		// append to an existing file, create file if it doesn't initially exist
+		OpenOption[] ops = new OpenOption[] {StandardOpenOption.CREATE, StandardOpenOption.APPEND};
+		writeToFile(text, path, ops);
+	}
+	
+	public static void main(String[] args) {
+		String text = "hello world.123";
+		String path = "log.txt";
+		writeToFile(text, path);
+		appendToFile(text, path);
 	}
 }
