@@ -15,5 +15,6 @@ public class Runner {
 		int cnt = BZ2Splitter.split(TEST_FILE, parser);
 		long duration = System.currentTimeMillis() - start;
 		System.out.println(String.format("total: %d files, cost %d ms", cnt, duration));
+		System.out.printf("%.1f files/second, %.1f ms/file\n", cnt / (duration / 1000.0), duration * 1.0 / cnt);
 	}
 }
