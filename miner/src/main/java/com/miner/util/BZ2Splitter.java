@@ -43,23 +43,19 @@ public class BZ2Splitter {
 	 */
 	public static int split(String filename, IParser parser) {
 		int cnt = 0;
-		BufferedReader reader = getBufferedReaderForCompressedFile(filename);
-		if (reader != null) {
-			String line = null;
-			StringBuilder sb = new StringBuilder();
-			try {
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-					if(line.contains("</doc>")) {
-						cnt++;
-						parser.parse(sb.toString(), cnt);
-						sb = new StringBuilder();
-					}
+		String line = null;
+		StringBuilder sb = new StringBuilder();
+		try (BufferedReader reader = getBufferedReaderForCompressedFile(filename)) {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+				if (line.contains("</doc>")) {
+					cnt++;
+					parser.parse(sb.toString(), cnt);
+					sb = new StringBuilder();
 				}
-				reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+		} catch (IOException e) {
+//			e.printStackTrace();  // when EOF java.io.IOException: bad block header
 		}
 		return cnt;
 	}
