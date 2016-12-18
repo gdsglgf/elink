@@ -1,16 +1,15 @@
 package com.miner;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import com.miner.parser.JsoupApiParser;
-import com.miner.util.BZ2Splitter;
 import com.miner.util.IOUtils;
 
 public class JsoupApiParserTest {
-    private static JsoupApiParser jap=new JsoupApiParser();
-	@Test
+    private static JsoupApiParser jap = new JsoupApiParser();
+    private static int mockIndex = 0;
+
+    @Test
 	public void testfromString() {
 		String html="<doc>"
 				+ "<docno>0015e77674b7604f-07dd0ee2a1c1ef92-469b9cc3ce78f64d392776be46976e8f</docno>"
@@ -24,14 +23,24 @@ public class JsoupApiParserTest {
 				+ " </head>"
 				+ "</html>"
 				+ "</doc>";
-		jap.parse(html, 0);
-		
+		jap.parse(html, mockIndex);
 	}
-	@Test
+
+    @Test
 	public void testFromFile() {
 		String html = IOUtils.fileToString("src/test/data/test.html");
-		jap.parse(html, 1);
-		BZ2Splitter.split("src/test/data/test.bz2", jap);
-	//	p.parse(html, 2);
+		jap.parse(html, mockIndex);
 	}
+    
+    @Test
+    public void testMeta() {
+    	String html = "<meta name=\"Keywords\" content=\"one\" /><meta content=\"two\" name=\"Description\" />";
+    	jap.parse(html, mockIndex);
+    }
+    
+    @Test
+    public void testEmpty() {
+    	String html = "<doc></doc>";
+    	jap.parse(html, mockIndex);
+    }
 }

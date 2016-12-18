@@ -1,21 +1,13 @@
 package com.miner;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import com.miner.parser.JsoupParser;
-import com.miner.util.BZ2Splitter;
 import com.miner.util.IOUtils;
 
 public class JsoupParserTest {
     private static JsoupParser jp=new JsoupParser();
-	@Before
-	
-
+    
 	@Test
 	public void testfromString() {
 		String html="<doc>"
@@ -31,14 +23,12 @@ public class JsoupParserTest {
 				+ "</html>"
 				+ "</doc>";
 		jp.parse(html, 0);
-		
 	}
+
 	@Test
 	public void testFromFile() {
 		String html = IOUtils.fileToString("src/test/data/test.html");
 		jp.parse(html, 1);
-		BZ2Splitter.split("src/test/data/test.bz2", jp);
-	//	p.parse(html, 2);
 	}
 
 }
