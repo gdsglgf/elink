@@ -1,6 +1,7 @@
-log.txt
+log.*
 *.log
 logs/
+log/
 tmp/
 *.bz2
 
