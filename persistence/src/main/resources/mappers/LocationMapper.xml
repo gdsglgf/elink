@@ -1,0 +1,30 @@
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.elink.persistence.mapper.LocationMapper">
+	<resultMap id="LocationResultMap" type="com.elink.persistence.model.Location">
+		<id property="locId" column="loc_id" />
+		<result property="diskId" column="disk_id" />
+		<association property="directory" column="dir_id"
+			select="com.elink.persistence.mapper.DirectoryMapper.getById" />
+		<association property="batch" column="batch_id"
+			select="com.elink.persistence.mapper.BatchMapper.getById" />
+	</resultMap>
+
+	<select id="getById" parameterType="long" resultMap="LocationResultMap">
+		SELECT *
+		FROM t_location
+		WHERE loc_id = #{id}
+	</select>
+
+	<insert id="create" 
+		parameterType="com.elink.persistence.model.Location" 
+		flushCache="true" 
+		keyProperty="locId" 
+		keyColumn="loc_id" 
+		useGeneratedKeys="true">
+		INSERT INTO t_location (disk_id, dir_id, batch_id) 
+		VALUES (#{diskId}, #{directory.id}, #{batch.id})
+	</insert>
+</mapper>

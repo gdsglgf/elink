@@ -1,0 +1,29 @@
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.elink.persistence.mapper.DirectoryMapper">
+	<resultMap id="DirectoryResultMap" type="com.elink.persistence.model.Directory">
+		<id property="id" column="dir_id" />
+		<result property="name" column="dir_name" />
+	</resultMap>
+	
+	<select id="getById" 
+		parameterType="int"
+		resultMap="DirectoryResultMap"
+		useCache="true">
+		SELECT * 
+		FROM t_directory 
+		WHERE dir_id = #{id}
+	</select>
+	
+	<insert id="create" 
+		parameterType="com.elink.persistence.model.Directory" 
+		flushCache="true" 
+		keyProperty="id" 
+		keyColumn="dir_id" 
+		useGeneratedKeys="false">
+		INSERT INTO t_directory (dir_id, dir_name) 
+		VALUES (#{id}, #{name})
+	</insert>
+</mapper>

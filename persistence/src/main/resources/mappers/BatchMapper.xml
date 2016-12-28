@@ -1,0 +1,29 @@
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.elink.persistence.mapper.BatchMapper">
+	<resultMap id="BatchResultMap" type="com.elink.persistence.model.Batch">
+		<id property="id" column="batch_id" />
+		<result property="name" column="batch_name" />
+	</resultMap>
+	
+	<select id="getById" 
+		parameterType="int" 
+		resultMap="BatchResultMap" 
+		useCache="true">
+		SELECT * 
+		FROM t_batch 
+		WHERE batch_id = #{id}
+	</select>
+	
+	<insert id="create" 
+		parameterType="com.elink.persistence.model.Batch" 
+		flushCache="true" 
+		keyProperty="id" 
+		keyColumn="batch_id" 
+		useGeneratedKeys="false">
+		INSERT INTO t_batch (batch_id, batch_name) 
+		VALUES (#{id}, #{name})
+	</insert>
+</mapper>

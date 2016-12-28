@@ -1,0 +1,31 @@
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.elink.persistence.mapper.ParserLogMapper">
+	<resultMap id="ParserLogResultMap" type="com.elink.persistence.model.ParserLog">
+		<id property="id" column="log_id" />
+		<result property="amount" column="html_amount" />
+		<result property="costTime" column="cost_time" />
+		<association property="location" column="loc_id" select="com.elink.persistence.mapper.LocationMapper.getById"/>
+	</resultMap>
+	
+	<select id="getById" 
+		parameterType="int"
+		resultMap="ParserLogResultMap"
+		useCache="true">
+		SELECT * 
+		FROM t_parser_log 
+		WHERE log_id = #{id}
+	</select>
+	
+	<insert id="create" 
+		parameterType="com.elink.persistence.model.ParserLog" 
+		flushCache="true" 
+		keyProperty="id" 
+		keyColumn="log_id" 
+		useGeneratedKeys="true">
+		INSERT INTO t_parser_log (loc_id, html_amount, cost_time) 
+		VALUES (#{location.locId}, #{amount}, #{costTime})
+	</insert>
+</mapper>

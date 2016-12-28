@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.elink.persistence.mapper.PageMapper">
+	<resultMap id="PageResultMap" type="com.elink.persistence.model.Page">
+		<id property="id" column="html_id" />
+		<result property="docno" column="docno" />
+		<result property="url" column="url" />
+		<result property="title" column="title" />
+		<result property="keywords" column="keywords" />
+		<result property="description" column="description" />
+		<result property="rank" column="rank" />
+		<association property="location" column="loc_id" select="com.elink.persistence.mapper.LocationMapper.getById"/>
+	</resultMap>
+	
+	<select id="getById" 
+		parameterType="long"
+		resultMap="PageResultMap"
+		useCache="true">
+		SELECT * 
+		FROM t_html 
+		WHERE html_id = #{id}
+	</select>
+	
+	<insert id="create" 
+		parameterType="com.elink.persistence.model.Page" 
+		flushCache="true" 
+		keyProperty="id" 
+		keyColumn="html_id" 
+		useGeneratedKeys="true">
+		INSERT INTO t_html (docno, url, title, keywords, description, loc_id, rank) 
+		VALUES (#{docno}, #{url}, #{title}, #{keywords}, #{description}, #{location.locId}, #{rank})
+	</insert>
+</mapper>
