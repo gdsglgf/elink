@@ -32,4 +32,29 @@
 		INSERT INTO t_html (docno, url, title, keywords, description, loc_id, rank) 
 		VALUES (#{docno}, #{url}, #{title}, #{keywords}, #{description}, #{location.locId}, #{rank})
 	</insert>
+	
+	<select id="countAll" 
+		resultType="long"
+		useCache="true">
+		SELECT count(*) 
+		FROM t_html
+	</select>
+	
+	<select id="findAll" 
+		parameterType="hashmap"
+		resultType="hashmap"
+		useCache="true">
+		SELECT html_id, docno, url, title, keywords, description
+		FROM t_html 
+		LIMIT #{offset}, #{rows}
+	</select>
+	
+	<select id="findAll2" 
+		parameterType="int"
+		resultType="hashmap"
+		useCache="true">
+		SELECT html_id, docno, url, title, keywords, description
+		FROM t_html 
+		LIMIT #{offset}, #{limit}
+	</select>
 </mapper>
