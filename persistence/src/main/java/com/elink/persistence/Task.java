@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Arrays;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +21,13 @@ import com.elink.persistence.service.BatchService;
 import com.elink.persistence.service.DirectoryService;
 import com.elink.util.DataUtils;
 import com.elink.util.IOUtils;
+import com.elink.util.JacksonUtils;
 import com.elink.util.PageParser;
 
 @Component
 public class Task {
+	private static Logger log = Logger.getLogger(Task.class);
+	
 	public void parse(String html, Location loc, int rank) {
 		Page page = PageParser.parse(html);
 		page.setLocation(loc);
@@ -32,8 +35,8 @@ public class Task {
 		try {
 			pageMapper.create(page);
 		} catch (Exception e) {
-			System.out.printf("Save page occurs error:%s\n", e.getMessage());
-			System.out.println(page);
+//			System.out.printf("Save page occurs error:%s\n", e.getMessage());
+			log.debug(JacksonUtils.toJSon(page));
 		}
 	}
 	
@@ -70,12 +73,14 @@ public class Task {
 		ParserLog parserLog = new ParserLog();
 		
 		for (String dir : dirs) {
+			
 			// set dir id, name and save
 			directory.setId(DataUtils.parseDirId(dir));
 			directory.setName(dir);
 			directoryService.create(directory);
 			
 			String dirPath = Constants.DATA_HOME + dir;
+			System.out.printf("loading dir:%s\n", dirPath);
 			String[] batches = new File(dirPath).list(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
@@ -84,6 +89,13 @@ public class Task {
 			});
 			
 			for (String b : batches) {
+				String batchPath = dirPath + "/" + b;
+				
+				// ignore batch
+				if (Constants.isIgnore(batchPath)) {
+					continue;
+				}
+				
 				// set batch id, name, and save
 				batch.setId(DataUtils.parseBatchId(b));
 				batch.setName(b);
@@ -95,8 +107,8 @@ public class Task {
 				location.setBatch(batch);
 				locationMapper.create(location);
 				
-				// parse bz2 file 
-				String batchPath = dirPath + "/" + b;
+				// parse bz2 file
+				log.debug(String.format("loading batch:%s\n", batchPath));
 				long start = System.currentTimeMillis();
 				int cnt = splitBatch(batchPath, location);
 				long duration = System.currentTimeMillis() - start;
@@ -107,19 +119,12 @@ public class Task {
 				parserLog.setCostTime((int) duration);
 				parserLogMapper.create(parserLog);
 				
-				System.out.println(location);
-				System.out.println(String.format("total: %d files, cost %d ms", cnt, duration));
-				System.out.printf("%.1f files/second, %.1f ms/file\n", cnt / (duration / 1000.0), duration * 1.0 / cnt);
+				log.debug(location);
+				log.debug(String.format("total: %d files, cost %d ms", cnt, duration));
+				log.debug(String.format("%.1f files/second, %.1f ms/file\n", 
+						cnt / (duration / 1000.0), duration * 1.0 / cnt));
 			}
 		}
-
-//		Arrays.asList(home.list()).stream()
-//			.filter(name -> name.contains(Constants.DATA_DIR_KEY))
-//			.map(f -> Constants.DATA_HOME + f)
-//			.flatMap(f -> Arrays.asList(new File(f).list())
-//						.stream().map(p -> f + "/" + p)
-//						.filter(a -> a.endsWith(Constants.DATA_FILE_SUFFIX)))
-//			.forEach(System.out::println);
 	}
 
 	@Autowired

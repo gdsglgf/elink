@@ -96,7 +96,7 @@ public class Page {
 	}
 	
 	public String toString() {
-		return String.format("Page[id:%d, docno:%s, url:%s, title:%s, keywords:%s, description:%s, loc:%s]",
-				id, docno, url, title, keywords, description, location);
+		return String.format("Page[id:%d, rank:%d, docno:%s, url:%s, title:%s, keywords:%s, description:%s, loc:%s]",
+				id, rank, docno, url, title, keywords, description, location);
 	}
 }

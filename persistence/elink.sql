@@ -143,3 +143,4 @@ SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name="t_html";
 SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name="t_location";
 SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name="t_parser_log";
 
+CREATE DATABASE `elink` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
