@@ -54,6 +54,40 @@ public class IOUtils {
 		return cnt;
 	}
 	
+	/**
+	 * 
+	 * @param filename  文件路径名
+	 * @return   文件的个数
+	 */
+	public static int split(String filename) {
+		int cnt = 0;
+		String line = null;
+		StringBuilder sb = new StringBuilder();
+		try (BufferedReader reader = getBufferedReaderForCompressedFile(filename)) {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+				if (line.contains("</doc>")) {
+					cnt++;
+					sb.toString();
+					sb = new StringBuilder();
+				}
+			}
+		} catch (IOException e) {
+//			e.printStackTrace();  // when EOF java.io.IOException: bad block header
+		}
+		return cnt;
+	}
+	
+	public static void benchmark(String filename) {
+		long start = System.nanoTime();
+		int cnt = split(filename);
+		long end = System.nanoTime();
+		long duration = TimeUnit.NANOSECONDS.toMillis(end - start);
+		String message = String.format("%s: %s, total: %d files, cost %d ms, %.1f files/second, %.1f ms/file", 
+				DateUtils.now(), filename, cnt, duration,  cnt / (duration / 1000.0), duration * 1.0 / cnt);
+		System.out.println(message);
+	}
+	
 	public static void benchmark(String filename, IConsumer consumer) {
 		long start = System.nanoTime();
 		int cnt = split(filename, consumer);
@@ -88,7 +122,8 @@ public class IOUtils {
 	
 	public static void main(String[] args) {
 		String filename = Config.getTestDataFile();
-		benchmark(filename, new IConsumer() {});
-		countFileBenchmark(filename);
+		benchmark(filename);
+//		benchmark(filename, new IConsumer() {});
+//		countFileBenchmark(filename);
 	}
 }
